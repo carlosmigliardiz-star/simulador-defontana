@@ -47,11 +47,12 @@
   .field input:focus { outline: none; border-color: var(--df-orange); background: white; }
   .field-note { font-size: 11px; color: var(--df-muted); }
 
-  .nps-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .nps-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 100%; }
+  .nps-pair .field input { height: 40px; font-size: 14px; }
   .diff-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 4px; }
   .badge-ok  { background: #D1FAE5; color: #065F46; }
   .badge-warn { background: #FEF3C7; color: #92400E; }
-  .badge-no  { background: #FEE2E2; color: #991B1B; }
+  .badge-no  { background: #FEF3E8; color: #B45309; }
 
   /* TOOLTIP */
   .tt { position: relative; display: inline-flex; align-items: center; }
@@ -77,7 +78,7 @@
   .chip-ok  { background: #D1FAE5; color: #065F46; }
   .chip-mid { background: #DBEAFE; color: #1E40AF; }
   .chip-low { background: #FEF3C7; color: #92400E; }
-  .chip-no  { background: #FEE2E2; color: #991B1B; }
+  .chip-no  { background: #FEF3E8; color: #B45309; }
 
   .tramo-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
   .tramo-table td { padding: 9px 12px; border-bottom: 1px solid #F1F4F7; color: var(--df-muted); }
@@ -92,6 +93,16 @@
   .result-val.highlight { color: var(--df-orange); font-size: 20px; }
 
   .app-footer { text-align: center; padding: 2rem; font-size: 11px; color: var(--df-muted); border-top: 1px solid var(--df-border); margin-top: 1rem; }
+  .step-pill { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--df-orange); color: white; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-txt { font-size: 11px; font-weight: 600; color: var(--df-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .btn-clear { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; font-size: 12px; font-weight: 600; font-family: Inter, sans-serif; color: var(--df-muted); background: white; border: 1px solid var(--df-border); border-radius: 8px; cursor: pointer; transition: all 0.15s; margin-bottom: 14px; }
+  .btn-clear:hover { border-color: var(--df-orange); color: var(--df-orange); }
+  .completeness-bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 12px; font-weight: 600; transition: all 0.3s; }
+  .comp-ok  { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
+  .comp-mid { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; }
+  .comp-no  { background: #F1F4F7; color: var(--df-muted); border: 1px solid var(--df-border); }
+  .comp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   @media (max-width: 600px) {
     .grid-2, .grid-3 { grid-template-columns: 1fr; }
@@ -99,6 +110,38 @@
   }
 </style>
   <script src="https://widgets.defontana.com/chatbot/bundle.js" defer></script>
+<style>
+  /* Sticky result bar */
+  .sticky-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #0D1B2A 0%, #1A2E45 100%);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
+    height: 56px;
+    padding: 0 2rem;
+  }
+  .sticky-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 28px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .sticky-item:last-child { border-right: none; }
+  .sticky-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+  .sticky-value { font-size: 18px; font-weight: 700; color: #FFFFFF; white-space: nowrap; }
+  .sticky-value.orange { color: #F15A22; }
+  .sticky-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .badge-green  { background: #D1FAE5; color: #065F46; }
+  .badge-blue   { background: #DBEAFE; color: #1E40AF; }
+  .badge-yellow { background: #FEF3C7; color: #92400E; }
+  .badge-red    { background: #FEE2E2; color: #991B1B; }
+  body { padding-bottom: 64px; }
+  .tt-icon { width: 20px !important; height: 20px !important; font-size: 10px !important; min-width: 32px; min-height: 32px; cursor: help; }
+</style>
 </head>
 <body>
 
@@ -108,7 +151,7 @@
     <div class="header-divider"></div>
     <div>
       <div class="header-title">Simulador de Bono KAM</div>
-      <div class="header-subtitle">M&amp;G — Modelo de compensación variable</div>
+      <div class="header-subtitle">DCS — Modelo de compensación variable</div>
     </div>
   </div>
   <div class="header-badge">KPIs DCS 2026</div>
@@ -116,15 +159,16 @@
 
 <div class="container">
 
+  <div class="step-pill"><span class="step-num">1</span><span class="step-txt">Configura tu perfil</span></div>
   <div class="section-label">Configuración del ejecutivo</div>
   <div class="card">
-    <div class="grid-3" style="margin-bottom:14px;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
       <div class="field">
         <label>
           Meta MRR (CLP)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Selecciona tu meta de MRR según tramo UF asignado.</span></span>
         </label>
-        <select id="meta_mrr" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;">
+        <select id="meta_mrr" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:100%;">
           <option value="1800000">(UF 45) $ 1.800.000 CLP</option>
           <option value="1500000">(UF 38) $ 1.500.000 CLP</option>
           <option value="1283333">(UF 32) $ 1.283.333 CLP</option>
@@ -138,32 +182,43 @@
           Meta contactabilidad (%)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agrega el porcentaje de tu meta de contactabilidad.</span></span>
         </label>
-        <select id="meta_cont" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;">
+        <select id="meta_cont" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:100%;">
           <option value="100">100%</option>
           <option value="60" selected>60%</option>
         </select>
         <span class="field-note">Umbral binario</span>
       </div>
-      <div class="field">
-        <label>NPS</label>
-        <div class="nps-pair">
-          <div class="field">
-            <label>
-              Meta NPS
-              <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agregar la meta del equipo de NPS según el mes en que se aplicará el cálculo.</span></span>
-            </label>
-            <input type="number" id="nps_meta" value="-5" step="1" min="-100" max="100">
-          </div>
-          <div class="field">
-            <label>NPS actual</label>
-            <input type="number" id="nps_act" value="-30" step="1" min="-100" max="100">
-          </div>
-        </div>
+    </div>
+    <div style="display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; margin-top:4px;">
+      <div class="field" style="width:160px; flex-shrink:0;">
+        <label style="font-size:11px;font-weight:600;color:var(--df-muted);text-transform:uppercase;letter-spacing:0.06em;">
+          Meta NPS
+          <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agregar la meta del equipo de NPS según el mes en que se aplicará el cálculo.</span></span>
+        </label>
+        <select id="nps_meta" style="height:40px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:160px;">
+          <option value="-5" selected>-5% Abril</option>
+          <option value="0">0% Mayo</option>
+          <option value="5">5% Junio</option>
+        </select>
+      </div>
+      <div class="field" style="width:110px; flex-shrink:0;">
+        <label style="font-size:11px;font-weight:600;color:var(--df-muted);text-transform:uppercase;letter-spacing:0.06em;">NPS Actual</label>
+        <input type="number" id="nps_act" class="input-editable" value="-30" step="1" min="-100" max="100" style="width:110px;">
+      </div>
+      <div style="display:flex; align-items:center; padding-bottom:2px;">
         <span id="nps_badge"></span>
       </div>
     </div>
   </div>
 
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
+    <div class="step-pill"><span class="step-num">2</span><span class="step-txt">Ingresa tus resultados</span></div>
+    <button class="btn-clear" onclick="limpiarCampos()">✕ Limpiar campos</button>
+  </div>
+  <div id="completeness_bar" class="completeness-bar comp-no">
+    <span class="comp-dot" id="comp_dot" style="background:#9CA3AF;"></span>
+    <span id="comp_txt">Completa los campos para ver tu resultado</span>
+  </div>
   <div class="section-label">Resultados del mes</div>
   <div class="card">
     <div class="grid-2" style="margin-bottom:14px;">
@@ -186,6 +241,7 @@
       <div class="field">
         <label>Fintech (clientes nuevos)</label>
         <input type="number" id="fintech" class="input-editable" value="1" step="1" min="0">
+        <span class="input-hint">Ingresa cantidad de clientes Fintech del mes</span>
         <span class="field-note">1+ cliente = cumple al 100%</span>
       </div>
       <div class="field">
@@ -196,6 +252,7 @@
     </div>
   </div>
 
+  <div class="step-pill"><span class="step-num">3</span><span class="step-txt">Revisa tu resultado</span></div>
   <div class="section-label">Composición del score ponderado</div>
   <div class="card" style="padding:20px;">
     <table class="kpi-table">
@@ -302,6 +359,41 @@ function puTramo(s){
   return            {pct:0.04,id:"tr1"};
 }
 
+function limpiarCampos(){
+  document.getElementById("mrr").value = "";
+  document.getElementById("cont").value = "";
+  document.getElementById("fintech").value = "";
+  document.getElementById("pago_unico").value = "";
+  // trigger blur to clear formatted overlay
+  ["mrr","pago_unico"].forEach(function(id){
+    var fmt = document.getElementById(id+"_fmt");
+    if(fmt){ fmt.style.display="none"; }
+    var inp = document.getElementById(id);
+    if(inp){ inp.style.color="var(--df-text)"; }
+  });
+  calc();
+}
+
+function updateCompleteness(mrr, cont, fintech, pago_unico){
+  var filled = [mrr>0, cont>0, pago_unico>0].filter(Boolean).length;
+  var bar = document.getElementById("completeness_bar");
+  var dot = document.getElementById("comp_dot");
+  var txt = document.getElementById("comp_txt");
+  if(filled===3){
+    bar.className="completeness-bar comp-ok";
+    dot.style.background="#059669";
+    txt.textContent="Todos los campos completados — resultado listo";
+  } else if(filled>0){
+    bar.className="completeness-bar comp-mid";
+    dot.style.background="#D97706";
+    txt.textContent="Faltan "+(3-filled)+" campo"+(3-filled>1?"s":"")+" por completar";
+  } else {
+    bar.className="completeness-bar comp-no";
+    dot.style.background="#9CA3AF";
+    txt.textContent="Completa los campos para ver tu resultado";
+  }
+}
+
 function calc(){
   var meta_mrr  = parseFloat(document.getElementById("meta_mrr").value)  || 1;
   var meta_cont = parseFloat(document.getElementById("meta_cont").value) || 60;
@@ -312,6 +404,7 @@ function calc(){
   var fintech   = parseFloat(document.getElementById("fintech").value)   || 0;
   var pago_unico= parseFloat(document.getElementById("pago_unico").value)|| 0;
 
+  updateCompleteness(mrr, cont, fintech, pago_unico);
   var nps_ok = nps_act >= nps_meta;
   var nb = document.getElementById("nps_badge");
   nb.innerHTML = nps_ok
@@ -369,6 +462,15 @@ function calc(){
     "<div class=\"result-row\"><span class=\"result-label\">Score ponderado</span><span class=\"result-val\">"+pp(score)+"</span></div>"
     +"<div class=\"result-row\"><span class=\"result-label\">Tramo pago único aplicado</span><span class=\"result-val\">"+pp(tramo.pct*100)+"</span></div>"
     +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único (Bruto)</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>";
+
+  // Update sticky bar
+  document.getElementById("sticky_score").textContent = pp(score);
+  document.getElementById("sticky_bono").textContent = clp(bono_pu);
+
+  var tramo_pct = pp(tramo.pct*100);
+  var badge_class = score>=100?"badge-green":score>=80?"badge-blue":score>=40?"badge-yellow":"badge-red";
+  document.getElementById("sticky_tramo").textContent = tramo_pct;
+  document.getElementById("sticky_tramo").className = "sticky-badge "+badge_class;
 }
 calc();
 // Show formatted values on load
@@ -378,13 +480,31 @@ setTimeout(function(){
   });
 }, 50);
 </script>
-  <chat-widget authentication="29ebc43a28ba3864d6093b2374f3f0017211d5cfadaeb1ae706ddbe0a706645a" paddingx="0" paddingy="15" position="right"></chat-widget>
+  <!-- Sticky result bar -->
+<div class="sticky-bar" id="sticky_bar">
+  <div class="sticky-item">
+    <span class="sticky-label">Score</span>
+    <span class="sticky-value orange" id="sticky_score">—</span>
+  </div>
+  <div class="sticky-item">
+    <span class="sticky-label">Tramo PU</span>
+    <span id="sticky_tramo" class="sticky-badge badge-blue">—</span>
+  </div>
+  <div class="sticky-item">
+    <span class="sticky-label">Bono PU Bruto</span>
+    <span class="sticky-value orange" id="sticky_bono">—</span>
+  </div>
+</div>
+
+<chat-widget authentication="29ebc43a28ba3864d6093b2374f3f0017211d5cfadaeb1ae706ddbe0a706645a" paddingx="0" paddingy="15" position="right"></chat-widget>
 <style>
   chat-widget { position: fixed !important; right: 0 !important; bottom: 15px !important; z-index: 9999 !important; }
   .input-editable {
     background: #FFFDF5 !important;
     border: 1.5px solid #E8D5A3 !important;
     border-radius: 8px;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   .input-editable:focus {
     background: #FFFFFF !important;
