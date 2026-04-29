@@ -110,7 +110,7 @@
       <div class="header-subtitle">M&amp;G — Modelo de compensación variable</div>
     </div>
   </div>
-  <div class="header-badge">KPIs 2025</div>
+  <div class="header-badge">KPIs DCS 2026</div>
 </header>
 
 <div class="container">
@@ -237,6 +237,39 @@
 ["meta_mrr","meta_cont","nps_meta","nps_act","mrr","cont","fintech","pago_unico"]
   .forEach(function(id){ document.getElementById(id).addEventListener("input", calc); });
 
+// Format thousand separators as overlay labels
+var moneyFields = ["meta_mrr","mrr","pago_unico"];
+moneyFields.forEach(function(id){
+  var input = document.getElementById(id);
+  // Wrap if not already wrapped
+  if(!input.parentNode.classList.contains("money-wrap")){
+    var wrap = document.createElement("div");
+    wrap.className = "money-wrap";
+    wrap.style.cssText = "position:relative;";
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    var overlay = document.createElement("div");
+    overlay.id = id+"_fmt";
+    overlay.style.cssText = "position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--df-text);pointer-events:none;background:transparent;";
+    wrap.appendChild(overlay);
+  }
+  input.addEventListener("focus", function(){
+    document.getElementById(id+"_fmt").style.display="none";
+    input.style.color="var(--df-text)";
+  });
+  input.addEventListener("blur", function(){
+    var v = parseFloat(input.value);
+    if(!isNaN(v) && v>0){
+      document.getElementById(id+"_fmt").textContent = Math.round(v).toLocaleString("es-CL");
+      document.getElementById(id+"_fmt").style.display="block";
+      input.style.color="transparent";
+    } else {
+      document.getElementById(id+"_fmt").style.display="none";
+      input.style.color="var(--df-text)";
+    }
+  });
+});
+
 function fmt(n){ return Math.round(n).toLocaleString("es-CL"); }
 function clp(n){ return "$ "+fmt(n)+" CLP"; }
 function pp(n){ return n.toFixed(1)+"%"; }
@@ -326,6 +359,12 @@ function calc(){
     +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>";
 }
 calc();
+// Show formatted values on load
+setTimeout(function(){
+  ["meta_mrr","mrr","pago_unico"].forEach(function(id){
+    document.getElementById(id).dispatchEvent(new Event("blur"));
+  });
+}, 50);
 </script>
 </body>
 </html>
