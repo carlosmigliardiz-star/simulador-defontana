@@ -121,9 +121,15 @@
       <div class="field">
         <label>
           Meta MRR (CLP)
-          <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agrega tu Meta de MRR sin puntos ni comas.</span></span>
+          <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Selecciona tu meta de MRR según tramo UF asignado.</span></span>
         </label>
-        <input type="number" id="meta_mrr" value="1050000" step="1000">
+        <select id="meta_mrr" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;">
+          <option value="1800000">(UF 45) $ 1.800.000 CLP</option>
+          <option value="1520000">(UF 38) $ 1.520.000 CLP</option>
+          <option value="1280000">(UF 32) $ 1.280.000 CLP</option>
+          <option value="1040000" selected>(UF 26) $ 1.040.000 CLP</option>
+          <option value="880000">(UF 22) $ 880.000 CLP</option>
+        </select>
         <span class="field-note">Editable por ejecutivo</span>
       </div>
       <div class="field">
@@ -131,7 +137,10 @@
           Meta contactabilidad (%)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agrega el porcentaje de tu meta de contactabilidad.</span></span>
         </label>
-        <input type="number" id="meta_cont" value="60" step="1" min="0" max="100">
+        <select id="meta_cont" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;">
+          <option value="100">100%</option>
+          <option value="60" selected>60%</option>
+        </select>
         <span class="field-note">Umbral binario</span>
       </div>
       <div class="field">
@@ -238,7 +247,7 @@
   .forEach(function(id){ document.getElementById(id).addEventListener("input", calc); });
 
 // Format thousand separators as overlay labels
-var moneyFields = ["meta_mrr","mrr","pago_unico"];
+var moneyFields = ["mrr","pago_unico"];
 moneyFields.forEach(function(id){
   var input = document.getElementById(id);
   // Wrap if not already wrapped
@@ -361,7 +370,7 @@ function calc(){
 calc();
 // Show formatted values on load
 setTimeout(function(){
-  ["meta_mrr","mrr","pago_unico"].forEach(function(id){
+  ["mrr","pago_unico"].forEach(function(id){
     document.getElementById(id).dispatchEvent(new Event("blur"));
   });
 }, 50);
