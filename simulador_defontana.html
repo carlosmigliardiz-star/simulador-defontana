@@ -228,7 +228,7 @@
       </tbody>
     </table>
     <div class="result-row" style="margin-top:12px;">
-      <span class="result-label">Bono pago único</span>
+      <span class="result-label">Bono pago único (Bruto)</span>
       <span id="pu_val" class="result-val"></span>
     </div>
   </div>
@@ -365,7 +365,7 @@ function calc(){
   document.getElementById("resumen").innerHTML =
     "<div class=\"result-row\"><span class=\"result-label\">Score ponderado</span><span class=\"result-val\">"+pp(score)+"</span></div>"
     +"<div class=\"result-row\"><span class=\"result-label\">Tramo pago único aplicado</span><span class=\"result-val\">"+pp(tramo.pct*100)+"</span></div>"
-    +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>";
+    +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único (Bruto)</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>";
 }
 calc();
 // Show formatted values on load
