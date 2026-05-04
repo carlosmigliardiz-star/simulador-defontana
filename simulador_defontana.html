@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>Simulador de Bono KAM — Defontana</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -92,6 +92,7 @@
   .result-val { font-size: 15px; font-weight: 700; color: var(--df-text); }
   .result-val.highlight { color: var(--df-orange); font-size: 20px; }
 
+  .mb-14 { margin-bottom: 14px; }
   .app-footer { text-align: center; padding: 2rem; font-size: 11px; color: var(--df-muted); border-top: 1px solid var(--df-border); margin-top: 1rem; }
   .step-pill { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px; }
   .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--df-orange); color: white; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -162,10 +163,10 @@
   <div class="step-pill"><span class="step-num">1</span><span class="step-txt">Configura tu perfil</span></div>
   <div class="section-label">Configuración del ejecutivo</div>
   <div class="card">
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+    <div class="grid-2 mb-14">
       <div class="field">
         <label>
-          Meta MRR (CLP)
+          1. Meta MRR (CLP)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Selecciona tu meta de MRR según tramo UF asignado.</span></span>
         </label>
         <select id="meta_mrr" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:100%;">
@@ -179,7 +180,7 @@
       </div>
       <div class="field">
         <label>
-          Meta contactabilidad (%)
+          2. Meta contactabilidad (%)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agrega el porcentaje de tu meta de contactabilidad.</span></span>
         </label>
         <select id="meta_cont" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:100%;">
@@ -190,24 +191,24 @@
         <span class="field-note">Umbral binario</span>
       </div>
     </div>
-    <div style="display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap; margin-top:4px;">
-      <div class="field" style="width:160px; flex-shrink:0;">
-        <label style="font-size:11px;font-weight:600;color:var(--df-muted);text-transform:uppercase;letter-spacing:0.06em;">
-          Meta NPS
+    <div class="grid-2">
+      <div class="field">
+        <label>
+          3. Meta NPS
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agregar la meta del equipo de NPS según el mes en que se aplicará el cálculo.</span></span>
         </label>
-        <select id="nps_meta" style="height:40px;padding:0 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:160px;">
+        <select id="nps_meta" style="height:40px;padding:0 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid var(--df-border);border-radius:8px;background:#F8FAFC;color:var(--df-text);cursor:pointer;appearance:auto;width:100%;">
           <option value="-5" selected>-5% Abril</option>
           <option value="0">0% Mayo</option>
           <option value="5">5% Junio</option>
         </select>
       </div>
-      <div class="field" style="width:110px; flex-shrink:0;">
-        <label style="font-size:11px;font-weight:600;color:var(--df-muted);text-transform:uppercase;letter-spacing:0.06em;">NPS Actual</label>
-        <input type="number" id="nps_act" class="input-editable" value="-30" step="1" min="-100" max="100" style="width:110px;">
-      </div>
-      <div style="display:flex; align-items:center; padding-bottom:2px;">
-        <span id="nps_badge"></span>
+      <div class="field">
+        <label>4. Fintech (clientes nuevos)</label>
+        <div style="height:40px;display:flex;align-items:center;padding:0 12px;background:#F0F2F5;border:1.5px solid var(--df-border);border-radius:8px;">
+          <span style="font-size:14px;color:var(--df-muted);font-weight:500;">Meta = 1 cliente</span>
+        </div>
+        <span class="field-note">Fija — siempre 1 cliente mínimo</span>
       </div>
     </div>
   </div>
@@ -222,33 +223,48 @@
   </div>
   <div class="section-label">Resultados del mes</div>
   <div class="card">
-    <div class="grid-2" style="margin-bottom:14px;">
+    <div class="grid-2 mb-14">
       <div class="field">
         <label>
-          MRR logrado (CLP)
+          1. MRR logrado (CLP)
           <span class="tt"><span class="tt-icon">?</span><span class="tt-box">Agrega el cumplimiento del MRR real cobrado en el mes.</span></span>
         </label>
         <input type="number" id="mrr" class="input-editable" value="565753" step="1000">
         <span class="input-hint">Ingresa tu MRR real del mes</span>
       </div>
       <div class="field">
-        <label>Contactabilidad lograda (%)</label>
+        <label>2. Contactabilidad lograda (%)</label>
         <input type="number" id="cont" class="input-editable" value="54" step="1" min="0" max="100">
         <span class="input-hint">Ingresa el % de contactabilidad lograda</span>
         <span id="cont_badge"></span>
       </div>
     </div>
-    <div class="grid-2">
+    <div class="grid-2 mb-14">
       <div class="field">
-        <label>Fintech (clientes nuevos)</label>
+        <label>3. NPS Mes Anterior</label>
+        <input type="number" id="nps_prev" class="input-editable" value="-10" step="1" min="-100" max="100">
+        <span id="nps_badge"></span>
+      </div>
+      <div class="field">
+        <label>3. NPS Actual</label>
+        <input type="number" id="nps_act" class="input-editable" value="-30" step="1" min="-100" max="100">
+      </div>
+    </div>
+    <div class="grid-2 mb-14">
+      <div class="field">
+        <label>4. Fintech (clientes nuevos)</label>
         <input type="number" id="fintech" class="input-editable" value="1" step="1" min="0">
         <span class="input-hint">Ingresa cantidad de clientes Fintech del mes</span>
         <span class="field-note">1+ cliente = cumple al 100%</span>
       </div>
+    </div>
+    <div style="border-top:1.5px dashed var(--df-border);padding-top:14px;margin-top:4px;">
       <div class="field">
-        <label>Pago único (CLP)</label>
-        <input type="number" id="pago_unico" class="input-editable" value="716846" step="1000">
-        <span class="field-note">Venta pago único del mes</span>
+        <label style="font-size:11px;font-weight:600;color:var(--df-muted);text-transform:uppercase;letter-spacing:0.06em;">
+          Pago único del mes (CLP)
+        </label>
+        <input type="number" id="pago_unico" class="input-editable" value="716846" step="1000" style="max-width:340px;">
+        <span class="field-note">Venta no recurrente del mes — base para el bono</span>
       </div>
     </div>
   </div>
@@ -263,6 +279,20 @@
         </tr>
       </thead>
       <tbody id="kpi_tbody"></tbody>
+      <tbody id="acelerador_row">
+        <tr id="acel_tr">
+          <td style="text-align:left;font-weight:600;color:#059669;">Acelerador NPS</td>
+          <td style="color:#6B7A8D;">NPS negativo → positivo</td>
+          <td id="acel_logrado" style="color:#6B7A8D;">—</td>
+          <td><div class="bar-wrap-outer">
+            <div class="bar-track"><div id="acel_bar" class="bar-fill" style="width:0%;background:#059669;"></div></div>
+            <span id="acel_pct" style="min-width:38px;font-weight:700;font-size:13px;text-align:right;color:#9CA3AF;">0.0%</span>
+          </div></td>
+          <td style="color:#6B7A8D;">5%</td>
+          <td id="acel_aporte" style="font-weight:700;color:#9CA3AF;">0.0%</td>
+          <td id="acel_chip"><span class="chip" style="background:#F3F4F6;color:#6B7A8D;">inactivo</span></td>
+        </tr>
+      </tbody>
       <tfoot>
         <tr>
           <td colspan="5" style="text-align:right;">
@@ -304,7 +334,7 @@
 <div class="app-footer">Defontana &nbsp;·&nbsp; Simulador de compensación variable KAM &nbsp;·&nbsp; Uso interno</div>
 
 <script>
-["meta_mrr","meta_cont","nps_meta","nps_act","mrr","cont","fintech","pago_unico"]
+["meta_mrr","meta_cont","nps_meta","nps_prev","nps_act","mrr","cont","fintech","pago_unico"]
   .forEach(function(id){ document.getElementById(id).addEventListener("input", calc); });
 
 // Format thousand separators as overlay labels
@@ -406,6 +436,7 @@ function calc(){
   var pago_unico= parseFloat(document.getElementById("pago_unico").value)|| 0;
 
   updateCompleteness(mrr, cont, fintech, pago_unico);
+  var nps_prev = parseFloat(document.getElementById("nps_prev").value) || 0;
   var nps_ok = nps_act >= nps_meta;
   var nb = document.getElementById("nps_badge");
   nb.innerHTML = nps_ok
@@ -450,28 +481,66 @@ function calc(){
       +"</tr>";
   });
   document.getElementById("kpi_tbody").innerHTML = tbody;
-  document.getElementById("score_total").textContent = pp(score);
+  // Acelerador NPS: de negativo/0 a positivo
+  var acel_ok = (nps_prev <= 0) && (nps_act > 0);
+  var acel_aporte = acel_ok ? 5 : 0;
+  var score_total = score + acel_aporte;
 
-  var tramo = puTramo(score);
+  // Update acelerador row
+  var acel_logrado = nps_prev + "% → " + nps_act + "%";
+  document.getElementById("acel_logrado").textContent = acel_logrado;
+  if(acel_ok){
+    document.getElementById("acel_bar").style.width = "100%";
+    document.getElementById("acel_pct").textContent = "100.0%";
+    document.getElementById("acel_pct").style.color = "#059669";
+    document.getElementById("acel_aporte").textContent = "5.0%";
+    document.getElementById("acel_aporte").style.color = "#059669";
+    document.getElementById("acel_chip").innerHTML = "<span class=\"chip\" style=\"background:#D1FAE5;color:#065F46;font-weight:700;\">✓ +5%</span>";
+  } else {
+    document.getElementById("acel_bar").style.width = "0%";
+    document.getElementById("acel_pct").textContent = "0.0%";
+    document.getElementById("acel_pct").style.color = "#9CA3AF";
+    document.getElementById("acel_aporte").textContent = "0.0%";
+    document.getElementById("acel_aporte").style.color = "#9CA3AF";
+    document.getElementById("acel_chip").innerHTML = "<span class=\"chip\" style=\"background:#F3F4F6;color:#6B7A8D;\">inactivo</span>";
+  }
+
+  document.getElementById("score_total").textContent = pp(score_total);
+
+  var tramo = puTramo(score_total);
   ["tr1","tr2","tr3","tr4"].forEach(function(id){
     document.getElementById(id).className = id===tramo.id?"active":"";
   });
   var bono_pu = pago_unico * tramo.pct;
   document.getElementById("pu_val").textContent = clp(bono_pu)+" ("+pp(tramo.pct*100)+" sobre "+clp(pago_unico)+")";
 
+    var acel_style = acel_ok
+    ? "font-size:15px;font-weight:700;color:#059669;"
+    : "font-size:15px;font-weight:500;color:#9CA3AF;";
+  var acel_label = acel_ok
+    ? "✓ Acelerador NPS"
+    : "Acelerador NPS";
+  var acel_val = acel_ok
+    ? "+5% aplicado"
+    : "no aplica";
+
   document.getElementById("resumen").innerHTML =
-    "<div class=\"result-row\"><span class=\"result-label\">Score ponderado</span><span class=\"result-val\">"+pp(score)+"</span></div>"
+    "<div class=\"result-row\"><span class=\"result-label\">Score ponderado</span><span class=\"result-val\">"+pp(score_total)+"</span></div>"
     +"<div class=\"result-row\"><span class=\"result-label\">Tramo pago único aplicado</span><span class=\"result-val\">"+pp(tramo.pct*100)+"</span></div>"
-    +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único (Bruto)</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>";
+    +"<div class=\"result-row\"><span class=\"result-label\">Bono pago único (Bruto)</span><span class=\"result-val highlight\">"+clp(bono_pu)+"</span></div>"
+    +"<div class=\"result-row\" style=\"border-top:1.5px solid #E2E6EA;margin-top:4px;padding-top:14px;\"><span class=\"result-label\" style=\""+acel_style+"\">"+acel_label+"</span><span style=\""+acel_style+"\">"+(acel_ok?"<span style=\"background:#D1FAE5;color:#065F46;font-size:13px;font-weight:700;padding:4px 12px;border-radius:8px;\">✓ +5%</span>":"<span style=\"background:#F3F4F6;color:#9CA3AF;font-size:13px;font-weight:600;padding:4px 12px;border-radius:8px;\">inactivo</span>")+"</span></div>";
 
-  // Update sticky bar
-  document.getElementById("sticky_score").textContent = pp(score);
-  document.getElementById("sticky_bono").textContent = clp(bono_pu);
-
-  var tramo_pct = pp(tramo.pct*100);
-  var badge_class = score>=100?"badge-green":score>=80?"badge-blue":score>=40?"badge-yellow":"badge-red";
-  document.getElementById("sticky_tramo").textContent = tramo_pct;
-  document.getElementById("sticky_tramo").className = "sticky-badge "+badge_class;
+  // Update sticky bar safely
+  var el_score = document.getElementById("sticky_score");
+  var el_bono  = document.getElementById("sticky_bono");
+  var el_tramo = document.getElementById("sticky_tramo");
+  if(el_score) el_score.textContent = pp(score_total);
+  if(el_bono)  el_bono.textContent  = clp(bono_pu);
+  if(el_tramo){
+    var badge_class = score_total>=100?"badge-green":score_total>=80?"badge-blue":score_total>=40?"badge-yellow":"badge-red";
+    el_tramo.textContent  = pp(tramo.pct*100);
+    el_tramo.className    = "sticky-badge "+badge_class;
+  }
 }
 calc();
 // Show formatted values on load
@@ -523,6 +592,91 @@ setTimeout(function(){
     content: "✎";
     font-size: 11px;
   }
+
+  /* ===================== RESPONSIVE MOBILE ===================== */
+  @media (max-width: 640px) {
+
+    /* Header */
+    .header { padding: 0 1rem; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+    .header-title { font-size: 13px; }
+    .header-subtitle { font-size: 10px; }
+    .header-badge { font-size: 10px; padding: 3px 8px; }
+    .logo-img { height: 28px; }
+    .header-divider { display: none; }
+
+    /* Container */
+    .container { padding: 1rem; }
+
+    /* All grids become single column */
+    .grid-2, .grid-3, .grid-4,
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Cards */
+    .card { padding: 14px 14px; }
+
+    /* Fields */
+    .field input, .field select {
+      font-size: 16px !important; /* prevents iOS zoom */
+      height: 44px !important;
+    }
+    .field label { font-size: 11px; }
+
+    /* KPI Table — make it scrollable */
+    .card:has(#kpi_tbody) { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 14px 0; }
+    .kpi-table { min-width: 580px; font-size: 12px; }
+    .kpi-table thead th, .kpi-table tbody td { padding: 8px 8px; }
+    .bar-track { width: 48px; }
+
+    /* Tramo table */
+    .tramo-table { font-size: 12px; }
+    .tramo-table td { padding: 8px 10px; }
+
+    /* Sticky bar — stack vertically on very small screens */
+    .sticky-bar { height: auto; padding: 8px 12px; flex-wrap: wrap; gap: 4px; justify-content: space-around; }
+    .sticky-item { padding: 4px 10px; border-right: none; border-bottom: none; }
+    .sticky-label { font-size: 10px; }
+    .sticky-value { font-size: 15px; }
+    .sticky-badge { font-size: 10px; }
+    body { padding-bottom: 80px; }
+
+    /* Step pills */
+    .step-pill { margin-bottom: 6px; }
+    .step-txt { font-size: 10px; }
+
+    /* Completeness bar */
+    .completeness-bar { font-size: 11px; padding: 8px 12px; }
+
+    /* Clear button */
+    .btn-clear { font-size: 11px; padding: 6px 12px; }
+
+    /* Result rows */
+    .result-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .result-val { font-size: 18px; }
+    .result-val.highlight { font-size: 22px; }
+
+    /* Tooltips — open upward and constrain width */
+    .tt-box { width: 180px; font-size: 11px; }
+
+    /* Pago unico separator */
+    [style*="border-top:1.5px dashed"] .field input { max-width: 100% !important; }
+
+    /* NPS badge inline */
+    #nps_badge { font-size: 11px; }
+    .diff-badge { font-size: 11px; padding: 3px 8px; }
+
+    /* Footer */
+    .app-footer { padding: 1.5rem 1rem; font-size: 10px; }
+  }
+
+  @media (max-width: 380px) {
+    .sticky-bar { flex-direction: column; height: auto; padding: 10px; gap: 6px; }
+    .sticky-item { width: 100%; justify-content: space-between; padding: 4px 8px; border: none; }
+    body { padding-bottom: 130px; }
+  }
+
 </style>
 </body>
 </html>
