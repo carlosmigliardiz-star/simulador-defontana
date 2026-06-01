@@ -477,12 +477,12 @@
     </div>
     <div class="weight-pill">
       <div class="weight-pill-label">Contactabilidad</div>
-      <div class="weight-pill-value">10%</div>
+      <div class="weight-pill-value">15%</div>
       <div class="weight-pill-sub">Binario — cumple/no cumple</div>
     </div>
     <div class="weight-pill">
       <div class="weight-pill-label">NPS</div>
-      <div class="weight-pill-value">10%</div>
+      <div class="weight-pill-value">5%</div>
       <div class="weight-pill-sub">Binario — cumple/no cumple</div>
     </div>
   </div>
@@ -590,11 +590,11 @@
         <div class="score-item-val" id="si-mrr">0,0%</div>
       </div>
       <div class="score-item">
-        <div class="score-item-label">Contactabilidad (10%)</div>
+        <div class="score-item-label">Contactabilidad (15%)</div>
         <div class="score-item-val" id="si-cont">0,0%</div>
       </div>
       <div class="score-item">
-        <div class="score-item-label">NPS (10%)</div>
+        <div class="score-item-label">NPS (5%)</div>
         <div class="score-item-val" id="si-nps">0,0%</div>
       </div>
     </div>
@@ -711,11 +711,11 @@ function calc() {
 
   // --- Contactabilidad (binario) ---
   const cont_ok  = cont_log >= meta_cont;
-  const aporte_cont = cont_ok ? 10 : 0;
+  const aporte_cont = cont_ok ? 15 : 0;
 
   // --- NPS (binario) ---
   const nps_ok   = nps_actual >= meta_nps;
-  const aporte_nps = nps_ok ? 10 : 0;
+  const aporte_nps = nps_ok ? 5 : 0;
 
   // --- Score total ---
   const score = aporte_mrr + aporte_cont + aporte_nps;
